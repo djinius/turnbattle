@@ -102,7 +102,7 @@ define config.end_game_transition = None
 ## 게임이 시작된 후에는 "window show", "window hide", 그리고 "window auto" 문을
 ## 사용하여 변경할 수 있습니다.
 
-define config.window = "auto"
+define config.window = "hide"
 
 
 ## 대화 창을 표시하고 숨기는 데 사용되는 전환

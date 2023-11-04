@@ -10,6 +10,8 @@ define e = Character('아이린', color="#c8ffc8")
 # 여기에서부터 게임이 시작합니다.
 label start:
 
+    e "스프라이트 저작권은 Robert Pinero에게 있어요."
+    
     show screen srpgBasic
     pause
 

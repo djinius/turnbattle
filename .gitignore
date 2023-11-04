@@ -1,0 +1,10 @@
+**/*.rpyc
+**/*.rpymc
+**/*.bak
+**/cache
+**/saves
+**/.DS_Store
+log.txt
+traceback.txt
+errors.txt
+.vscode

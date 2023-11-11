@@ -12,7 +12,14 @@ label start:
 
     e "스프라이트 저작권은 Robert Pinero에게 있어요."
     
-    show screen srpgBasic
-    pause
+label srpgProgress:
+    call screen srpgSelectUnit
+
+    if moveState:
+        $ movableCoordinates = getMovableCoordinates(selectedFriend)
+        call screen srpgSelectDestination(movableCoordinates)
+        $ selectedFriend = None
+
+    jump srpgProgress
 
     return

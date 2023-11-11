@@ -29,8 +29,12 @@
 #
 ################################################################################
 
+################################################################################
+# 해골기사 스프라이트
+################################################################################
 image skeletonSpriteSheet = "images/sprites/skeleton.png"
 
+# 해골기사 - 대기
 image skeleton idleOriginal:
     Crop((350 * 0, 210 * 0, 350, 210), "skeletonSpriteSheet")
     pause .25
@@ -45,6 +49,7 @@ image skeleton idleOriginal:
 image skeleton idle:
     Transform("skeleton idleOriginal", xzoom=-1)
 
+# 해골기사 - 이동
 image skeleton walk:
     Crop((350 * 6, 210 * 0, 350, 210), "skeletonSpriteSheet")
     pause .25
@@ -56,6 +61,7 @@ image skeleton walk:
     pause .25
     repeat
 
+# 해골기사 - 찌르기
 image skeleton attackOriginal:
     Crop((350 * 3, 210 * 0, 350, 210), "skeletonSpriteSheet")
     pause .25
@@ -66,3 +72,38 @@ image skeleton attackOriginal:
 image skeleton attack:
     Transform("skeleton attackOriginal", xzoom=-1)
 
+# 해골기사 - 피격
+image skeleton hitOriginal:
+    Crop((350 * 0, 210 * 4, 350, 210), "skeletonSpriteSheet")
+    pause .25
+    Crop((350 * 1, 210 * 4, 350, 210), "skeletonSpriteSheet")
+    pause .25
+    Crop((350 * 2, 210 * 4, 350, 210), "skeletonSpriteSheet")
+
+image skeleton hit:
+    Transform("skeleton hitOriginal", xzoom=-1)
+
+################################################################################
+# 허수아비 스프라이트
+################################################################################
+image trainingDummySpriteSheet = "images/sprites/dummy.png"
+
+# 허수아비 대기
+image trainingDummy idle:
+    Crop((200 * 0, 200 * 0, 200, 200), "trainingDummySpriteSheet")
+    pause .25
+    Crop((200 * 1, 200 * 0, 200, 200), "trainingDummySpriteSheet")
+    pause .25
+    Crop((200 * 2, 200 * 0, 200, 200), "trainingDummySpriteSheet")
+    pause .25
+    Crop((200 * 1, 200 * 0, 200, 200), "trainingDummySpriteSheet")
+    pause .25
+    repeat
+
+# 허수아비 피격
+image trainingDummy hit:
+    Crop((200 * 0, 200 * 4, 200, 200), "trainingDummySpriteSheet")
+    pause .25
+    Crop((200 * 1, 200 * 4, 200, 200), "trainingDummySpriteSheet")
+    pause .25
+    Crop((200 * 2, 200 * 4, 200, 200), "trainingDummySpriteSheet")

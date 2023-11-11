@@ -26,7 +26,7 @@ init -1 python:
 """
 
 class srpgUnit:
-    def __init__(self, name, hp, mp, beginx, beginy, idleImage, walkImage, attackImage):
+    def __init__(self, name, hp, mp, beginx, beginy, idleImage, walkImage, attackImage, hitImage):
         self.name = name
         self.hp = hp
         self.mp = mp
@@ -37,19 +37,50 @@ class srpgUnit:
         self.idleImage = idleImage
         self.walkImage = walkImage
         self.attackImage = attackImage
+        self.hitImage = hitImage
 
     def getPos(self):
         return srpgBoardPos(self.curx, self.cury)
+    
+    def isFriendly(self): pass
+    def getMoveRange(self): pass
+
+    def moveto(self, x, y):
+        self.curx = x
+        self.cury = y
 
 class srpgSkeleton(srpgUnit):
     def __init__(self, beginx, beginy):
-        print(beginx, beginy)
         super(srpgSkeleton, self).__init__("해골기사님",
                                             100, 100,
                                             beginx, beginy,
                                             "skeleton idle",
                                             "skeleton walk",
-                                            "skeleton attack")
+                                            "skeleton attack",
+                                            "skeleton hit")
+
+    def isFriendly(self):
+        return True
+    
+    def getMoveRange(self):
+        return 4
+
+class srpgTrainingDummy(srpgUnit):
+    def __init__(self, beginx, beginy):
+        super(srpgTrainingDummy, self).__init__("훈련용 허수아비",
+                                            100, 100,
+                                            beginx, beginy,
+                                            "trainingDummy idle",
+                                            None,
+                                            None,
+                                            "trainingDummy hit")
+
+    def isFriendly(self):
+        return False
+
+    def getMoveRange(self):
+        return 0
+
 
 def srpgBoardPos(x, y):
     centerx = 1920 // 2
@@ -59,3 +90,52 @@ def srpgBoardPos(x, y):
     ypos = centery + (y - 2) * 200
 
     return (xpos, ypos)
+
+# 인접 좌표 얻기
+def getAdjacentCoordinates(c):
+    (x, y) = c
+    return [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+
+# 좌표 사용 가능 여부
+def isCoordinateInMap(c):
+    (x, y) = c
+    if (x < 0) or (x >= 7):
+        return False
+    if (y < 0) or (y >= 5):
+        return False
+    return True
+
+def getMovableCoordinates(unit):
+
+    movableCoordinates = []
+    visited = []
+
+    for x in range(0, 7):
+        movableCoordinates += [[False] * 5]
+        visited += [[False] * 5]
+
+    for u in forcesList:
+        visited[u.curx][u.cury] = True
+
+    visitedDistance = 0
+    visitCoordinates = [(unit.curx, unit.cury)]
+    nextCoordinates = []
+
+    while visitedDistance < unit.getMoveRange():
+        while visitCoordinates:
+            ncList = getAdjacentCoordinates(visitCoordinates.pop(0))
+
+            for nc in ncList:
+                if isCoordinateInMap(nc):
+                    (x, y) = nc
+                    if not visited[x][y]:
+                        nextCoordinates.append(nc)
+                        movableCoordinates[x][y] = True
+                        visited[x][y] = True
+
+        visitCoordinates = nextCoordinates
+        nextCoordinates = []
+
+        visitedDistance += 1
+
+    return movableCoordinates

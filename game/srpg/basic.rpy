@@ -21,9 +21,14 @@
 #
 ################################################################################
 
-default forcesList = [srpgSkeleton(0, 2)]
+default forcesList = [srpgSkeleton(0, 1), srpgSkeleton(0, 3), srpgTrainingDummy(5, 2)]
 
-screen srpgBasic():
+default selectedFriend = None
+default selectedFoe = None
+
+default moveState = False
+
+screen srpgBasic(setFriend = False):
     for x in range(0, 7):
         for y in range(0, 5):
             add Solid("#888"):
@@ -32,7 +37,72 @@ screen srpgBasic():
                 anchor (.5, .5)
 
     for u in forcesList:
-        add u.idleImage:
+        imagebutton:
+            idle u.idleImage
+
+            if u.isFriendly():
+                if setFriend:
+                    action SetVariable("selectedFriend", u)
+                else:
+                    action NullAction()
+            else:
+                action SetVariable("selectedFoe", u)
+
             pos u.getPos()
             anchor (.5, .5)
 
+            at srpgUnitTransform
+
+    if selectedFriend is not None:
+        vbox:
+            pos (0, 0)
+            anchor (0, 0)
+
+            add selectedFriend.idleImage xalign .5 zoom .75
+            text selectedFriend.name xalign .5
+            text "%d, %d" % (selectedFriend.curx, selectedFriend.cury) xalign .5
+
+    if selectedFoe is not None:
+        vbox:
+            pos (1., 0)
+            anchor (1., 0)
+
+            add selectedFoe.idleImage xalign .5 zoom .75
+            text selectedFoe.name xalign .5
+            text "%d, %d" % (selectedFoe.curx, selectedFoe.cury) xalign .5
+
+    transclude
+
+screen srpgSelectUnit():
+    use srpgBasic(setFriend = True):
+        if selectedFriend is not None:
+            textbutton "이동":
+                pos selectedFriend.getPos()
+                anchor (1., .0)
+                offset (-100, -15)
+                action [SetVariable("moveState", True), Return()]
+
+
+screen srpgSelectDestination(movableCoordinates):
+    use srpgBasic():
+        for x in range(0, 7):
+            for y in range(0, 5):
+                if movableCoordinates[x][y]:
+                    imagebutton:
+                        idle Solid("#00F")
+                        hover Solid("#88F")
+                        xysize (198, 198)
+                        pos srpgBoardPos(x, y)
+                        anchor (.5, .5)
+                        action [Function(selectedFriend.moveto, x=x, y=y), Return()]
+
+
+transform srpgUnitTransform:
+    on idle:
+        linear .25 zoom 1.
+    on hover:
+        linear .25 zoom 1.2
+    on selected_idle:
+        linear .05 zoom 1.25
+    on selected_hover:
+        linear .05 zoom 1.3

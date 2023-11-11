@@ -41,10 +41,12 @@ class srpgUnit:
 
     def getPos(self):
         return srpgBoardPos(self.curx, self.cury)
-    
+
+    # pure virtual functions - 상속받는 클래스들은 이 함수를 반드시 구현해야 함
     def isFriendly(self): pass
     def getMoveRange(self): pass
 
+    # 유닛 이동 함수
     def moveto(self, x, y):
         self.curx = x
         self.cury = y
@@ -123,19 +125,23 @@ def getMovableCoordinates(unit):
 
     while visitedDistance < unit.getMoveRange():
         while visitCoordinates:
+            # 인접 좌표를 얻어와서
             ncList = getAdjacentCoordinates(visitCoordinates.pop(0))
 
             for nc in ncList:
                 if isCoordinateInMap(nc):
                     (x, y) = nc
+                    # 해당 위치로 이동이 가능하면
                     if not visited[x][y]:
                         nextCoordinates.append(nc)
+                        # 그 위치를 True로 설정한다.
                         movableCoordinates[x][y] = True
                         visited[x][y] = True
 
         visitCoordinates = nextCoordinates
         nextCoordinates = []
 
+        # 유닛 이동 거리까지 반복하면 완료
         visitedDistance += 1
 
     return movableCoordinates
